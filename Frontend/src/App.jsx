@@ -5,11 +5,13 @@ import {
 } from "react-router-dom";
 
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import LeadList from "./pages/LeadList";
 import LeadForm from "./pages/LeadForm";
 import LeadDetails from "./pages/LeadDetails";
 import EditLead from "./pages/EditLead";
+import ActivityLogs from "./pages/ActivityLogs";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -24,6 +26,11 @@ function App() {
         <Route
           path="/"
           element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
         />
 
         <Route
@@ -47,8 +54,17 @@ function App() {
         <Route
           path="/create-lead"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={["manager", "admin"]}>
               <LeadForm />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/logs"
+          element={
+            <ProtectedRoute allowedRoles={["manager", "admin"]}>
+              <ActivityLogs />
             </ProtectedRoute>
           }
         />

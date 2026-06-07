@@ -1,13 +1,19 @@
 import { Navigate } from "react-router-dom";
+import { getTokenPayload } from "../utils/auth";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, allowedRoles = [] }) {
+    const token = localStorage.getItem("token");
+    const payload = getTokenPayload();
 
-    const token =
-        localStorage.getItem("token");
+    if (!token) {
+        return <Navigate to="/" />;
+    }
 
-    return token
-        ? children
-        : <Navigate to="/" />;
+    if (allowedRoles.length > 0 && !allowedRoles.includes(payload?.role)) {
+        return <Navigate to="/dashboard" />;
+    }
+
+    return children;
 }
 
 export default ProtectedRoute;

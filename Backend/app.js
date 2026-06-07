@@ -3,8 +3,8 @@ const cors = require("cors");
 
 const authRoutes = require("./src/routes/authRoutes");
 const leadRoutes = require("./src/routes/leadRoutes");
-const dashboardRoutes =
-    require("./src/routes/dashboardRoutes");
+const dashboardRoutes = require("./src/routes/dashboardRoutes");
+const logRoutes = require("./src/routes/logRoutes");
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/leads", leadRoutes);
 
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/logs", logRoutes);
 
 app.get("/", (req, res) => {
     res.send("Lead Management API");

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { Link } from "react-router-dom";
+import { isManagerOrAdmin } from "../utils/auth";
 
 
 
@@ -11,6 +12,8 @@ function Dashboard() {
         totalAgents: 0,
         totalManagers: 0
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
 
@@ -19,20 +22,18 @@ function Dashboard() {
     }, []);
 
     const fetchDashboard = async () => {
+        setLoading(true);
+        setError("");
 
         try {
-
-            const response =
-                await API.get("/dashboard");
-
+            const response = await API.get("/dashboard");
             setStats(response.data);
-
         } catch (error) {
-
-            console.log(error);
-
+            console.error(error);
+            setError(error?.response?.data?.message || "Unable to load dashboard stats");
+        } finally {
+            setLoading(false);
         }
-
     };
 
     return (
@@ -43,65 +44,90 @@ function Dashboard() {
                 Dashboard
             </h1>
 
-            <div className="row">
+            {error && (
+                <div className="alert alert-danger">
+                    {error}
+                </div>
+            )}
 
-                <div className="col-md-4">
+            {loading ? (
+                <div className="text-center py-4">Loading dashboard...</div>
+            ) : (
+                <>
+                    <div className="row">
 
-                    <div className="card text-center p-3">
+                        <div className="col-md-4">
 
-                        <h5>Total Leads</h5>
+                            <div className="card text-center p-3">
 
-                        <h2>
-                            {stats.totalLeads}
-                        </h2>
+                                <h5>Total Leads</h5>
+
+                                <h2>
+                                    {stats.totalLeads}
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                        <div className="col-md-4">
+
+                            <div className="card text-center p-3">
+
+                                <h5>Total Agents</h5>
+
+                                <h2>
+                                    {stats.totalAgents}
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                        <div className="col-md-4">
+
+                            <div className="card text-center p-3">
+
+                                <h5>Total Managers</h5>
+
+                                <h2>
+                                    {stats.totalManagers}
+                                </h2>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                </div>
+                    <div className="mt-4">
+                        {isManagerOrAdmin() && (
+                            <Link
+                                to="/create-lead"
+                                className="btn btn-success me-2"
+                            >
+                                Create Lead
+                            </Link>
+                        )}
 
-                <div className="col-md-4">
+                        <Link
+                            to="/leads"
+                            className="btn btn-primary"
+                        >
+                            View Leads
+                        </Link>
 
-                    <div className="card text-center p-3">
-
-                        <h5>Total Agents</h5>
-
-                        <h2>
-                            {stats.totalAgents}
-                        </h2>
-
+                        {isManagerOrAdmin() && (
+                            <Link
+                                to="/logs"
+                                className="btn btn-secondary ms-2"
+                            >
+                                Activity Logs
+                            </Link>
+                        )}
                     </div>
-
-                </div>
-
-                <div className="col-md-4">
-
-                    <div className="card text-center p-3">
-
-                        <h5>Total Managers</h5>
-
-                        <h2>
-                            {stats.totalManagers}
-                        </h2>
-
-                    </div>
-
-                </div>
-                
-                <Link
-                    to="/create-lead"
-                    className="btn btn-success me-2"
-                >
-                    Create Lead
-                </Link>
-
-                <Link
-                    to="/leads"
-                    className="btn btn-primary"
-                >
-                    View Leads
-                </Link>
-
-            </div>
+                </>
+            )}
 
         </div>
 

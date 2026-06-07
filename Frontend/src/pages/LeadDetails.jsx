@@ -25,9 +25,7 @@ function LeadDetails() {
                     `/leads/${id}`
                 );
 
-            setLead(
-                response.data[0]
-            );
+            setLead(response.data);
 
         } catch (error) {
 
@@ -92,7 +90,7 @@ function LeadDetails() {
                     </p>
 
                     <p>
-                        <strong>Assigned To:</strong> {lead.assigned_to}
+                        <strong>Assigned To:</strong> {lead.assigned_agent || lead.assigned_to}
                     </p>
 
                 </div>

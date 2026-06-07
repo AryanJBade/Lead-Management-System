@@ -13,4 +13,20 @@ const generateToken = (user) => {
     );
 };
 
-module.exports = generateToken;
+const generateRefreshToken = (user) => {
+    return jwt.sign(
+        {
+            id: user.id,
+            role: user.role
+        },
+        process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET,
+        {
+            expiresIn: "7d"
+        }
+    );
+};
+
+module.exports = {
+    generateToken,
+    generateRefreshToken
+};

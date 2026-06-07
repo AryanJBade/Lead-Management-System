@@ -13,6 +13,8 @@ function LeadForm() {
         source: "",
         notes: ""
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
 
@@ -26,6 +28,8 @@ function LeadForm() {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        setLoading(true);
+        setError("");
 
         try {
 
@@ -43,11 +47,10 @@ function LeadForm() {
         } catch (error) {
 
             console.log(error);
+            setError(error?.response?.data?.message || "Error Creating Lead");
 
-            alert(
-                "Error Creating Lead"
-            );
-
+        } finally {
+            setLoading(false);
         }
 
     };
@@ -64,12 +67,20 @@ function LeadForm() {
                     onSubmit={handleSubmit}
                 >
 
+                    {error && (
+                        <div className="alert alert-danger">
+                            {error}
+                        </div>
+                    )}
+
                     <input
                         type="text"
                         name="name"
                         placeholder="Name"
                         className="form-control mb-3"
+                        value={formData.name}
                         onChange={handleChange}
+                        required
                     />
 
                     <input
@@ -77,7 +88,9 @@ function LeadForm() {
                         name="email"
                         placeholder="Email"
                         className="form-control mb-3"
+                        value={formData.email}
                         onChange={handleChange}
+                        required
                     />
 
                     <input
@@ -85,6 +98,7 @@ function LeadForm() {
                         name="phone"
                         placeholder="Phone"
                         className="form-control mb-3"
+                        value={formData.phone}
                         onChange={handleChange}
                     />
 
@@ -93,6 +107,7 @@ function LeadForm() {
                         name="source"
                         placeholder="Source"
                         className="form-control mb-3"
+                        value={formData.source}
                         onChange={handleChange}
                     />
 
@@ -100,13 +115,15 @@ function LeadForm() {
                         name="notes"
                         placeholder="Notes"
                         className="form-control mb-3"
+                        value={formData.notes}
                         onChange={handleChange}
                     />
 
                     <button
                         className="btn btn-success"
+                        disabled={loading}
                     >
-                        Create Lead
+                        {loading ? "Creating..." : "Create Lead"}
                     </button>
 
                 </form>

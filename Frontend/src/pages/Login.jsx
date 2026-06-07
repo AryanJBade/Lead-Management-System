@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
@@ -30,6 +30,10 @@ function Login() {
             localStorage.setItem(
                 "token",
                 response.data.token
+            );
+            localStorage.setItem(
+                "refreshToken",
+                response.data.refreshToken
             );
 
             alert("Login Successful");
@@ -98,6 +102,10 @@ function Login() {
                             </button>
 
                         </form>
+
+                        <div className="text-center mt-3">
+                            Don't have an account? <Link to="/signup">Signup</Link>
+                        </div>
 
                     </div>
 

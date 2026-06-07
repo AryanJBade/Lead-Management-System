@@ -54,7 +54,7 @@ router.put(
 router.delete(
     "/:id",
     authMiddleware,
-    roleMiddleware("admin"),
+    roleMiddleware("admin", "manager"),
     deleteLead
 );
 
